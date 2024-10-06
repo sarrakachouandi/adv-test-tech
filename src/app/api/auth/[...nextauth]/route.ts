@@ -15,7 +15,7 @@ const handler = NextAuth({
   ],
   secret: process.env.NEXTAUTH_SECRET as string,
   callbacks: {
-    async signIn({ user, account, profile }) {
+    async signIn({ profile }) {
       if (!profile) {
         console.error('Profile is undefined'); 
         return false; 
@@ -45,7 +45,7 @@ const handler = NextAuth({
 
       return true; 
     },
-    async session({ session, user }) {
+    async session({ session }) {
       const existingUser = await User.findOne({ email: session.user.email });
       if (existingUser) {
         session.user.id = existingUser._id.toString(); 

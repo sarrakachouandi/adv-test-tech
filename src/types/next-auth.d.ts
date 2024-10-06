@@ -1,7 +1,7 @@
-import NextAuth, { DefaultSession } from "next-auth";
+import { User as AdapterUser } from "next-auth"; 
 
 declare module "next-auth" {
-  interface User {
+  interface User extends AdapterUser {
     googleId?: string; 
     id: string; 
     email: string;
