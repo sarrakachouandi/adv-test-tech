@@ -15,7 +15,7 @@ const handler = NextAuth({
   ],
   secret: process.env.NEXTAUTH_SECRET as string,
   callbacks: {
-    async signIn({ profile }) {  // Removed 'user' and 'account'
+    async signIn({ user, account, profile }) {
       if (!profile) {
         console.error('Profile is undefined'); 
         return false; 
@@ -23,9 +23,11 @@ const handler = NextAuth({
 
       console.log('Profile:', profile);
 
+      
       let existingUser = await User.findOne({ googleId: profile.sub });
 
       if (!existingUser) {
+       
         existingUser = new User({
           email: profile.email,
           name: profile.name || profile.given_name || 'Unnamed',
@@ -43,7 +45,7 @@ const handler = NextAuth({
 
       return true; 
     },
-    async session({ session }) {  // Removed 'user'
+    async session({ session, user }) {
       const existingUser = await User.findOne({ email: session.user.email });
       if (existingUser) {
         session.user.id = existingUser._id.toString(); 
